@@ -1,0 +1,26 @@
+.box{
+    width:150px;
+    height:150px;
+    border-radius: 10px;
+    background-color: firebrick;
+}
+
+.spacer{
+    height: 350px;
+}
+
+.parent{
+    width:100vw;
+    height:700px;
+    background-color: #c4c4c4;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    display:flex;
+    align-items: center;
+    .box{
+        border-radius: 0;
+    }
+}
+.example{
+    padding: 20px;
+}
