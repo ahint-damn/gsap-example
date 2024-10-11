@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild, ElementRef, Host, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -17,6 +17,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('parent') parentElement!: ElementRef<HTMLDivElement>;
   @ViewChild('child') childElement!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('stickyParent') stickyParentElement!: ElementRef<HTMLDivElement>;
+  @ViewChild('stickyChild') stickyChildElement!: ElementRef<HTMLDivElement>;
   constructor() {
     gsap.registerPlugin(ScrollTrigger);
   }
@@ -24,8 +27,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     setTimeout(() => {
       this.setupScrollAnimations();
-    }, 200);
-  }
+    }, 10);
+    }
 
   setupScrollAnimations() {
     gsap.fromTo(
@@ -40,7 +43,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           start: 'top center',
           end: 'bottom center',
           scrub: true,
-          markers: true,
         },
       }
     );
@@ -56,7 +58,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           start: 'top center',
           end: 'bottom center',
           scrub: false,
-          markers: true,
         },
       }
     );
@@ -71,12 +72,41 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           start: 'top center',
           end: 'bottom center',
           scrub: true,
-          markers: true,
         },
       }
     );
 
 
+    gsap.fromTo(
+      this.stickyChildElement.nativeElement,
+      { x: `0vw`},
+      {
+        x: `-${this.stickyChildElement.nativeElement.scrollWidth + 200 - window.innerWidth}px`,
+        scrollTrigger: {
+          trigger: this.stickyChildElement.nativeElement,
+          start: 'center center',
+          end: () => `+=${this.stickyChildElement.nativeElement.scrollWidth + 200 - window.innerWidth}`,
+          scrub: true,
+          pin: true,
+        },
+        ease: 'none',
+        onStart: () => {
+          document.body.classList.add('text-animation');
+        },
+        onRepeat: () => {
+          document.body.classList.add('text-animation');
+        },
+        onInterrupt: () => {
+          document.body.classList.remove('text-animation');
+        },
+        onComplete: () => {
+          document.body.classList.remove('text-animation');
+        },
+        onReverseComplete: () => {
+          document.body.classList.remove('text-animation');
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
